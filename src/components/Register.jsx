@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 
@@ -8,6 +9,8 @@ export default function Register(){
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPass, setConfirmPass] = useState('')
+
+    const navigate = useNavigate()
 
     const url = 'http://206.189.91.54/api/v1/auth'
 
@@ -33,7 +36,6 @@ export default function Register(){
             const result = await response.json()
 
             if (result.errors) {
-                console.log(JSON.stringify(result.errors.full_messages))
                 alert(result.errors.full_messages)
                 
                 setEmail('')
@@ -45,6 +47,8 @@ export default function Register(){
                 setEmail('')
                 setPassword('')
                 setConfirmPass('')
+
+                navigate('/login')
             }
     }
 
@@ -89,6 +93,9 @@ export default function Register(){
                         <div className='mt-8 flex items-center justify-center'>
                             <button type='submit' className='text-white w-64 h-14 bg-gradient-to-r from-[#6e6e6e] to-[#373045] rounded-xl font-semibold active:scale-[.97]   '>Register</button>
                         </div>
+                        <div className='flex text-white justify-center mt-5 hover:underline'>
+                        <Link to="/login">Back to login</Link>
+                    </div>
                    
         </form>
         </div>

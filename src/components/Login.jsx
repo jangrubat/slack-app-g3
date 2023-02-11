@@ -33,6 +33,8 @@ export default function Login({setLoginWindow,setOpenMainBank,validation,    set
             body: JSON.stringify(data)
           })
           
+          const result = await response.json()
+
           if (response.ok) {
             const userInfo = {
       
@@ -44,9 +46,11 @@ export default function Login({setLoginWindow,setOpenMainBank,validation,    set
             }
       
             localStorage.setItem('user-info', JSON.stringify(userInfo))
-            const result = await response.json()
+            
             validation(true)
-            console.log(result.data)
+
+          } else {
+            alert(result.errors)
           }
 
     }

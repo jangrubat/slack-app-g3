@@ -11,6 +11,19 @@ function App() {
   const [ isValidated, setIsValidated ] = useState(false)
   const navigate = useNavigate()
 
+  const userData = JSON.parse(localStorage.getItem('user-info'))
+
+  useEffect(() => {
+
+    if (userData && userData) {
+      setIsValidated(true)
+    } else {
+      setIsValidated(false)
+    }
+
+
+  }, [userData])
+
   useEffect(() => {
     if (!isValidated) {
       navigate('/login')
