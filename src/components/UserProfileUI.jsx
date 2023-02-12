@@ -1,29 +1,40 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import Header from './Header';
+import Sidebar from './Sidebar';
+import Chat from './Chat';
 
 export default function UserProfileUI({setLoginWindow,setOpenMainBank,setCurrentUser,    setCurrentUBal,setRegister,accounts}){
 
     const navigate = useNavigate()
 
-    const handleLogout = () => {
-
-        localStorage.clear('user-info')
-        navigate('/login')
-
-    }
-
     return(
-        <div className=" w-full flex flex-col  bg-[#6a6a6a]">
-            <div className='w-full h-[10%] text-white bg-[#323232]'>Header</div>
-         <div className='border-dotted border-r-2 h-screen left-0 w-[35%]'>Side bar Chat</div>
+        <div className=" w-full flex flex-col">
 
-         <button onClick={handleLogout}>Logout</button>
+            <Container>
+                <Header />
+                <Main>
+                    <Sidebar />
+                    <Chat />
+                </Main>
+            </Container>
             
-
-
         </div>
 
     );
 
 }
+
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 40px auto
+`
+
+const Main = styled.div`
+  display: grid;
+  grid-template-columns: 350px auto;
+`
