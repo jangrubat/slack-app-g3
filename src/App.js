@@ -10,8 +10,8 @@ function App() {
 
   
   const [loginWindow, setLoginWindow] = useState(false);
-  const [profileWindow, setProfileWindow] = useState(false);
-  const [registerWindow, setRegisterWindow] = useState(true);
+  const [profileWindow, setProfileWindow] = useState(true);
+  const [registerWindow, setRegisterWindow] = useState(false);
 
 
 
