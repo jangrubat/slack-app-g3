@@ -1,38 +1,55 @@
 import * as React from 'react';
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 
 export default function Register(){
 
-    const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [userName, setUserName] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPass, setConfirmPass] = useState('')
 
-    const closeRegister= ()=>{
-        // setLoginWindow(true)
-        // setRegister(false)
-    }
+    const navigate = useNavigate()
 
+    const url = 'http://206.189.91.54/api/v1/auth'
 
-
-
-
-    const handleSubmit = (e)=>{
+    const handleSubmit = async (e)=>{
         e.preventDefault();
      
 
-        const accountBal=10000
+        const data = {
+            email: email,
+            password: password,
+            password_confirmation: confirmPass
+          }
+      
+          
+            const response = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data)
+            })
 
-        if(!fullName){
-            alert("Please add your information")
-        }
+            const result = await response.json()
 
-        // addUser({fullName, email, userName,password,accountBal})
-        closeRegister()
-     
+            if (result.errors) {
+                alert(result.errors.full_messages)
+                
+                setEmail('')
+                setPassword('')
+                setConfirmPass('')
 
+            } else if (result.status === 'success') {
+                alert('Account was successfully created!')
+                setEmail('')
+                setPassword('')
+                setConfirmPass('')
+
+                navigate('/login')
+            }
     }
 
 
@@ -45,14 +62,6 @@ export default function Register(){
            <p className=' text-[#ffffff] font-medium text-lg text-center  mt-4'>Please enter your details.</p>
 
            <div className='mt-8'>
-                         <div>
-                            <label className='text-[#ffffff] text-lg font-medium ' htmlFor="">Full Name</label>
-                            <input 
-                            value={fullName} 
-                            onChange={(e)=>setFullName(e.target.value)}
-
-                            className=' w-full border-2 border-gray-100 rounded-xl p-2 mt-1' placeholder='Enter your Full Name' />                            
-                        </div>
                         <div>
                             <label className='text-[#ffffff] text-lg font-medium ' htmlFor="">Email</label>
                             <input 
@@ -61,27 +70,20 @@ export default function Register(){
 
                             className=' w-full border-2 border-gray-100 rounded-xl p-2 mt-1' placeholder='Enter your email' />                            
                         </div>
-                        
-                        
                         <div>
-                            <label className='text-[#ffffff] text-lg font-medium ' htmlFor="">Username</label>
+                            <label className='text-[#ffffff] text-lg font-medium ' htmlFor="">Password</label>
                             <input 
-                            value={userName} 
-                            onChange={(e)=>setUserName(e.target.value)}
+                            value={password} 
+                            onChange={(e)=>setPassword(e.target.value)}
 
-                            className=' w-full border-2 border-gray-100 rounded-xl p-2 mt-1' placeholder='Enter your username' />                            
+                            className=' w-full border-2 border-gray-100 rounded-xl p-2 mt-1' placeholder='Enter your password' type='password' />                            
                         </div>
-
-
-
-
-                        
                         <div className='mt-2'>
-                            <label className='text-[#ffffff] text-lg font-medium' htmlFor="">Password</label>
-                            <input value={password} 
-                            onChange={(e)=>setPassword(e.target.value)} 
+                            <label className='text-[#ffffff] text-lg font-medium' htmlFor="">Confirm Password</label>
+                            <input value={confirmPass} 
+                            onChange={(e)=>setConfirmPass(e.target.value)} 
                             
-                            className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1' placeholder='Enter your password' type='password' />                            
+                            className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1' placeholder='Confirm your password' type='password' />                            
                         </div>
 
                        
@@ -91,6 +93,9 @@ export default function Register(){
                         <div className='mt-8 flex items-center justify-center'>
                             <button type='submit' className='text-white w-64 h-14 bg-gradient-to-r from-[#6e6e6e] to-[#373045] rounded-xl font-semibold active:scale-[.97]   '>Register</button>
                         </div>
+                        <div className='flex text-white justify-center mt-5 hover:underline'>
+                        <Link to="/login">Back to login</Link>
+                    </div>
                    
         </form>
         </div>

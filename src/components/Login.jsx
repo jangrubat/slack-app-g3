@@ -1,47 +1,57 @@
 import * as React from 'react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-export default function Login({setLoginWindow,setOpenMainBank,setCurrentUser,    setCurrentUBal,setRegister,accounts}){
+export default function Login({setLoginWindow,setOpenMainBank,validation,    setCurrentUBal,setRegister,accounts}){
 
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
 
-    const closeLogin= ()=>{
-        setLoginWindow(false)
-        setOpenMainBank(true)
-    }
+    // const closeLogin= ()=>{
+    //     setLoginWindow(false)
+    //     setOpenMainBank(true)
+    // }
 
-    const registerUser =()=>{
-        setRegister(true)
-        setLoginWindow(false)
-    }
+    // const registerUser =()=>{
+    //     setRegister(true)
+    //     setLoginWindow(false)
+    // }
 
-
-
-
-    
-
-    const handleSubmit = (e)=>{
+    const handleSubmit = async (e)=>{
         e.preventDefault();
         
-        const match = accounts.find((data) => data.userName === username && data.password === password)
+        const data = {
+            email: username,
+            password: password
+          }
+      
+          const response = await fetch('http://206.189.91.54/api/v1/auth/sign_in', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+          
+          const result = await response.json()
 
-        console.log(accounts)
-
-       
-
-
-        if(match){
-           
-            console.log(match.fullName)
-            setCurrentUser(match.fullName)
-            setCurrentUBal(match.accountBal)
-            closeLogin()
+          if (response.ok) {
+            const userInfo = {
+      
+              'access-token': response.headers.get('access-token'),
+              'client': response.headers.get('client'),
+              'expiry': response.headers.get('expiry'),
+              'uid': response.headers.get('uid')
+              
+            }
+      
+            localStorage.setItem('user-info', JSON.stringify(userInfo))
             
-            
-        }else{
-            alert("No User FOUND, PLEASE REGISTER")
-        }
+            validation(true)
+
+          } else {
+            alert(result.errors)
+          }
 
     }
 
@@ -79,7 +89,7 @@ export default function Login({setLoginWindow,setOpenMainBank,setCurrentUser,   
                             <button type='submit' className='text-white w-64 h-14 bg-gradient-to-r from-[#6e6e6e] to-[#373045] rounded-xl text-[20px] font-semibold active:scale-[.97]   '>Sign in</button>
                         </div>
                     <div className='flex text-white justify-center mt-5 hover:underline'>
-                        <button onClick={registerUser}>Don't have an Account? Register Here.</button>
+                        <Link to="/register">Don't have an Account? Register Here.</Link>
                     </div>
 
         </form>
