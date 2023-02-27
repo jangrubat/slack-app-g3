@@ -4,6 +4,57 @@ import { BsFillPlusSquareFill } from "react-icons/bs";
 
 export default function UserProfileUI({setLoginWindow,setOpenMainBank,setCurrentUser,    setCurrentUBal,setRegister,accounts}){
 
+
+
+    const [messageBody, setMessageBody] = useState('')
+    const url = 'http://206.189.91.54/api/v1/messages'
+
+
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+    const data = {
+        receiver_id: 1,
+        receiver_class: "User",
+        body: messageBody
+      }
+
+
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+
+        const result = await response.json()
+        if (result.errors) {
+            alert(result.errors.full_messages)
+
+            setMessageBody('')
+            
+
+        } else if (result.status === 'success') {
+            console.log(data)
+            setMessageBody('')
+        }
+
+    
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 
 
@@ -109,9 +160,14 @@ export default function UserProfileUI({setLoginWindow,setOpenMainBank,setCurrent
 
                     <div className='bg-[#1d1d1d]] h-[15%] w-full border-[#373045] border-t-[.5px] '>
                     <form className='p-4 self-center '>
-                        <textarea className='w-[100%] resize-none border-none h-[80px] first-letter:' placeholder='Type your message here ...' type="
+                        <textarea 
+                        
+                        value={messageBody} 
+                            onChange={(e)=>setMessageBody(e.target.value)}
+                        
+                        className='w-[100%] resize-none border-none h-[80px] first-letter:' placeholder='Type your message here ...' type="
                         " />
-                        <button className='m-2 w-[5%] h-[50%] text-[17px] bg-black rounded-2xl text-white '>SEND</button>
+                        <button onClick={handleSubmit} className='m-2 w-[5%] h-[50%] text-[17px] bg-black rounded-2xl text-white '>SEND</button>
                     </form>
                     </div>
 
